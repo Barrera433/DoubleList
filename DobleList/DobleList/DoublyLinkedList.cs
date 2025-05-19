@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DoubleList;
 
-public class DoublyLinkedList<T>
+public class DoublyLinkedList<T> where T : IComparable<T> 
 
 {
     private DoubleNode<T>? _head;
@@ -18,7 +18,7 @@ public class DoublyLinkedList<T>
         _head = null;
     }
 
-    public void InserAtBeginning(T data)
+    public void Add(T data)
     {
         var newNode = new DoubleNode<T>(data);
         if (_head == null)// Empty list
@@ -28,44 +28,42 @@ public class DoublyLinkedList<T>
         }
         else
         {
-            newNode.Next = _head;
-            _head.Prev = newNode;
-            _head = newNode;
+           DoubleNode<T> Current = _head;
+            while (Current != null && Current.Data!.CompareTo(data) < 0) 
+            {
+                Current = Current.Next!;
+            }
+            if (Current == _head) // insertar al principio 
+            {
+                newNode.Next = _head;
+                _head.Prev = newNode;
+                _head = newNode;
+            }
+            else // insertar en el medio 
+            {
+                newNode.Next = Current;
+                newNode.Prev = Current!.Prev;
+                Current.Prev!.Next = newNode;
+                Current.Prev = newNode;
+            }
 
         }
 
     }
 
-    public void InserAtEnd(T data)
+    public String ShowForward() // mostrar hacia adelante 
     {
-        var newNode = new DoubleNode<T>(data);
-        if (_tail == null)
+        var output = string.Empty;
+        var Current = _head;
+        while (Current != null)
         {
-            _head = newNode;
-            _tail = newNode;
+            output += $"{Current.Data}<=>";
+            Current = Current.Next!;
         }
-        else
-        {
-            _tail.Next = newNode;
-            newNode.Prev = _tail;
-            _tail = newNode;
-        }
+        return output.EndsWith("<=>") ? output.Substring(0, output.Length - 3) :output;
     }
-    //Prints the List fron head to tail
-    public String GettForward()
-    {
-        var output = String.Empty;
-        var current = _head;
-        while (current != null)
-        {
-            output += $"{current.Data}<=>";
-            current = current.Next;
-        }
-        return output;
-    }
-
-    //Prints the List fron head to head
-    public String GetBackward()
+  
+    public String ShowBackward() // Mostrar hacia atras 
     {
         var output = String.Empty;
         var current = _tail;
@@ -74,12 +72,140 @@ public class DoublyLinkedList<T>
             output += $"{current.Data} <=> ";
             current = current.Prev;
         }
-        return output.Substring(0, output.Length - 5);
+        return output.EndsWith("<=>") ? output.Substring(0, output.Length - 3) : output;
+
+    }
+    
+    public void SorAscending()
+    {
+        Console.WriteLine($"The list is ordered.: {Add}");
     }
 
-    public void Remove(T data)
+    public void SortDescending()
     {
-        var current = _head;
+        List<T> list = new List<T>();
+        DoubleNode<T>? current = _head;
+        while (current != null)
+        {
+            list.Add(current.Data!);
+            current = current.Next!;
+        }
+
+        list.Sort((a, b) => b.CompareTo(a)); //Lista descendente
+
+        _head = null;  
+        _head = null;
+
+        foreach (var item in list) // Reinsertar lista 
+        {
+            Add(item);
+        }
+        ReverseList();
+    }    
+
+    private void ReverseList()
+    {
+        DoubleNode<T>? current = _head;
+        DoubleNode<T>? temp = null;
+
+        while (current != null)
+        {
+            temp = current.Prev;
+            current.Prev = current.Next;
+            current.Next = temp;
+            current = current.Prev;
+        }
+        temp = _head;
+        _head = _tail;
+        _tail = temp;
+    }
+
+    public List<T>  GetModes()
+    {
+        Dictionary<T, int> occurrences = new Dictionary<T, int>();
+        DoubleNode <T>? current = _head;
+        while (current != null)
+        {
+            if (current.Data != null)
+            {
+                if (occurrences.ContainsKey(current.Data))
+                {
+                    occurrences[current.Data] ++;
+                }
+                else
+                {
+                    occurrences[current.Data] = 1;
+                }
+            }
+            current = current!.Next;
+        }
+
+        int maxOccurrence  = 0;
+        foreach (var pair in occurrences)
+        {
+            if (pair.Value > maxOccurrence)
+            {
+                maxOccurrence = pair.Value;
+            }
+        }
+
+        List<T> modes = new List<T>();
+        foreach (var pair in occurrences)
+        {
+            if (pair.Value == maxOccurrence)
+            {
+                modes.Add(pair.Key);
+            }
+        }
+        return modes;
+    }
+    public String ShowGraph()
+    {
+        Dictionary<T, int> occurrences = new Dictionary<T, int>();
+        DoubleNode<T>? current = _head;
+        while (current != null)
+        {
+            if (current.Data != null)
+            {
+                if (occurrences.ContainsKey(current.Data))
+                {
+                    occurrences[current.Data]++;
+                }
+                else
+                {
+                    occurrences[current.Data] = 1;
+
+                }
+            }
+            current = current!.Next;
+        }
+
+        String graph = "";
+        foreach (var pair in occurrences.OrderBy(Key => Key.Key))
+        {
+            graph += $"{pair.Key}{new String('*',pair.Value)}\n";
+        }
+
+        return graph;
+    }
+
+    public bool Exists (T data) // Existencia de datos 
+    {
+        DoubleNode<T>? current = _head;
+        while (current != null)
+        {
+            if (current.Data!.Equals(data))
+            {
+                return true;
+            }
+            current = current!.Next;
+        }
+
+        return false;
+    }
+    public void RemoveFirstOcurrence(T data)
+    {
+        DoubleNode<T>? current = _head;
         while (current != null)
         {
             if (current.Data!.Equals(data))
@@ -91,6 +217,51 @@ public class DoublyLinkedList<T>
                 else
                 {
                     _head = current.Next; // Remuve head
+
+                    if (_head != null)
+                    {
+                        _head.Prev = null;
+                    }
+                }
+                if (current.Next != null)
+                {
+                    current.Next.Prev = current.Prev;
+                }
+                else
+                {
+                    _tail = current.Prev;
+                    if (_tail != null)
+                    {
+                        _tail.Next = null;
+                    }
+                }
+
+                return;
+            }
+            current = current.Next;
+        }
+
+    }
+
+     public void RemoveAllOcurrence(T data)
+    {
+        DoubleNode<T>? current = _head;
+        while (current != null)
+        {
+            if (current.Data!.Equals(data))
+            {
+                if (current.Prev != null)
+                {
+                    current.Prev.Next = current.Next;
+                }
+                else
+                {
+                    _head = current.Next; // Remuve head
+
+                    if (_head != null)
+                    {
+                        _head.Prev = null;
+                    }
                 }
 
                 if (current.Next != null)
@@ -99,15 +270,16 @@ public class DoublyLinkedList<T>
                 }
                 else
                 {
-                    _tail = current.Prev;// Remuve tail
+                    _tail = current.Prev;
+                    if (_tail != null)
+                    {
+                        _tail.Next = null;
+                    }
                 }
-                break;
+
             }
             current = current.Next;
         }
-
-
-
     }
 
 }
