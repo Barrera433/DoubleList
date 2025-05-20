@@ -39,6 +39,12 @@ public class DoublyLinkedList<T> where T : IComparable<T>
                 _head.Prev = newNode;
                 _head = newNode;
             }
+            else if (Current == null) // insertar al final 
+            {
+                _tail!.Next = newNode;
+                newNode.Prev = _tail;
+                _tail = newNode;
+            }
             else // insertar en el medio 
             {
                 newNode.Next = Current;
@@ -75,11 +81,7 @@ public class DoublyLinkedList<T> where T : IComparable<T>
         return output.EndsWith("<=>") ? output.Substring(0, output.Length - 3) : output;
 
     }
-    
-    public void SorAscending()
-    {
-        Console.WriteLine($"The list is ordered.: {Add}");
-    }
+
 
     public void SortDescending()
     {
@@ -250,25 +252,15 @@ public class DoublyLinkedList<T> where T : IComparable<T>
         {
             if (current.Data!.Equals(data))
             {
-                if (current.Prev != null)
+                if (current == _head) // Si es el primer elemento
                 {
-                    current.Prev.Next = current.Next;
-                }
-                else
-                {
-                    _head = current.Next; // Remuve head
-
+                    _head = current.Next;
                     if (_head != null)
                     {
                         _head.Prev = null;
                     }
                 }
-
-                if (current.Next != null)
-                {
-                    current.Next.Prev = current.Prev;
-                }
-                else
+                else if (current == _tail) // Si es el último elemento
                 {
                     _tail = current.Prev;
                     if (_tail != null)
@@ -276,6 +268,12 @@ public class DoublyLinkedList<T> where T : IComparable<T>
                         _tail.Next = null;
                     }
                 }
+                else // Si es un elemento intermedio
+                {
+                    current.Prev!.Next = current.Next;
+                    current.Next!.Prev = current.Prev;
+                }
+
 
             }
             current = current.Next;

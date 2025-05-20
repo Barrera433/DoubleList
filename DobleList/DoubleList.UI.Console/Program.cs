@@ -28,12 +28,8 @@ do
             Console.WriteLine("List backward:" + List.ShowBackward());
             break;
 
-        case "4":
-           List.SorAscending(); // ordena ascendente 
-            break;
-
         case "5":
-            List.SorAscending(); // ordenar descendete 
+            List.SortDescending(); // ordenar descendete 
             Console.WriteLine("List sorted descending.");
             break;
 
@@ -94,7 +90,6 @@ string Menu()
     Console.WriteLine("1. Add"); // Adicionar
     Console.WriteLine("2. Show forward"); // Mostrar hacia adelante
     Console.WriteLine("3. Show backward"); // Mostrar hacia atrás
-    Console.WriteLine("4. Sort ascending"); // Ordenar ascendentemente
     Console.WriteLine("5. Sort descending"); // Ordenar descendentemente
     Console.WriteLine("6. Show mode(s)"); // Mostrar la(s) moda(s)
     Console.WriteLine("7. Show graph"); // Mostrar gráfico
