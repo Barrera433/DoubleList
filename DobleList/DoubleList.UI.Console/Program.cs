@@ -56,9 +56,13 @@ do
             var elementExists = Console.ReadLine();
             if (!String.IsNullOrEmpty(elementExists))
             {
-                Console.WriteLine("Exists?" + List.Exists(elementExists));
+                Console.WriteLine(List.Exists(elementExists));
             }
-            break;
+            else
+            {
+                Console.WriteLine("No items were entered to search.");
+            }
+                break;
 
         case "9":
             Console.WriteLine("Enter remove first occurrent: ");
@@ -75,7 +79,7 @@ do
             var elementToRemoveAll = Console.ReadLine();
             if (!String.IsNullOrEmpty(elementToRemoveAll))
             {
-                List.RemoveFirstOcurrence(elementToRemoveAll);
+                List.RemoveAllOcurrence(elementToRemoveAll);
                 Console.WriteLine("All occurrences removed.");
             }
                 break;

@@ -191,19 +191,19 @@ public class DoublyLinkedList<T> where T : IComparable<T>
         return graph;
     }
 
-    public bool Exists (T data) // Existencia de datos 
+    public String Exists (T data) // Existencia de datos 
     {
         DoubleNode<T>? current = _head;
         while (current != null)
         {
             if (current.Data!.Equals(data))
             {
-                return true;
+                return $"El elemento existe en la lista ";
             }
             current = current!.Next;
         }
 
-        return false;
+        return $"El elemento no existe en la lista ";
     }
     public void RemoveFirstOcurrence(T data)
     {
