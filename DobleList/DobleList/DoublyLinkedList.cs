@@ -75,7 +75,7 @@ public class DoublyLinkedList<T> where T : IComparable<T>
         var current = _tail;
         while (current != null)
         {
-            output += $"{current.Data} <=> ";
+            output += $"{current.Data}<=>";
             current = current.Prev;
         }
         return output.EndsWith("<=>") ? output.Substring(0, output.Length - 3) : output;
@@ -83,25 +83,27 @@ public class DoublyLinkedList<T> where T : IComparable<T>
     }
 
 
+    
+    
     public void SortDescending()
     {
         List<T> list = new List<T>();
         DoubleNode<T>? current = _head;
         while (current != null)
-        {
-            list.Add(current.Data!);
-            current = current.Next!;
+       {
+           list.Add(current.Data!);
+           current = current.Next!;
         }
 
         list.Sort((a, b) => b.CompareTo(a)); //Lista descendente
 
         _head = null;  
-        _head = null;
+       _head = null;
 
         foreach (var item in list) // Reinsertar lista 
         {
             Add(item);
-        }
+       }
         ReverseList();
     }    
 
